@@ -29,6 +29,7 @@ import { AssetAdapter } from "./AssetAdapter";
 import { ThemeAdapter } from "./ThemeAdapter";
 import { platform } from "./Platform";
 import { LoadingUI } from "./LoadingUI";
+import { GameMap } from "./gameMap";
 //////////////////////////////////////////////////////////////////////////////////////
 export class Main extends eui.UILayer {
     protected createChildren(): void {
@@ -64,8 +65,10 @@ export class Main extends eui.UILayer {
         try {
             const loadingView = new LoadingUI();
             this.stage.addChild(loadingView);
-            await RES.loadConfig("resource/default.res.json", "resource/");
-            await this.loadTheme();
+            //await RES.loadConfig("resource/default.res.json", "resource/");
+            //await this.loadTheme();
+
+            await RES.loadConfig("resource/texture.res.json", "resource/");
             await RES.loadGroup("preload", 0, loadingView);
             this.stage.removeChild(loadingView);
         }
@@ -84,23 +87,22 @@ export class Main extends eui.UILayer {
         });
     }
     private textfield: egret.TextField;
-    /**
-     * 创建场景界面
-     * Create scene interface
-     */
-    protected createGameScene(): void {
+
+    public createDefault() {
         let sky = this.createBitmapByName("bg_jpg");
         this.addChild(sky);
         let stageW = this.stage.stageWidth;
         let stageH = this.stage.stageHeight;
         sky.width = stageW;
         sky.height = stageH;
+
         let topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.5);
         topMask.graphics.drawRect(0, 0, stageW, 172);
         topMask.graphics.endFill();
         topMask.y = 33;
         this.addChild(topMask);
+
         let icon: egret.Bitmap = this.createBitmapByName("egret_icon_png");
         this.addChild(icon);
         icon.x = 26;
@@ -113,6 +115,7 @@ export class Main extends eui.UILayer {
         line.x = 172;
         line.y = 61;
         this.addChild(line);
+
         let colorLabel = new egret.TextField();
         colorLabel.textColor = 0xffffff;
         colorLabel.width = stageW - 172;
@@ -122,6 +125,7 @@ export class Main extends eui.UILayer {
         colorLabel.x = 172;
         colorLabel.y = 80;
         this.addChild(colorLabel);
+
         let textfield = new egret.TextField();
         this.addChild(textfield);
         textfield.alpha = 0;
@@ -132,12 +136,23 @@ export class Main extends eui.UILayer {
         textfield.x = 172;
         textfield.y = 135;
         this.textfield = textfield;
+
         let button = new eui.Button();
         button.label = "Click!";
         button.horizontalCenter = 0;
         button.verticalCenter = 0;
         this.addChild(button);
         button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
+    }
+
+    /**
+     * 创建场景界面
+     * Create scene interface
+     */
+    protected createGameScene(): void {
+        //this.createDefault();
+        const gameMap = new GameMap(this);
+        gameMap.renderMap();
     }
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

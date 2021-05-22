@@ -1,0 +1,20 @@
+{
+    "groups": [
+        {
+            "keys": "texture-wall,texture-road",
+            "name": "preload"
+        }
+    ],
+    "resources": [
+        {
+            "url": "texture/wall2.png",
+            "type": "image",
+            "name": "texture-wall"
+        },
+        {
+            "url": "texture/road2.png",
+            "type": "image",
+            "name": "texture-road"
+        }
+    ]
+}
