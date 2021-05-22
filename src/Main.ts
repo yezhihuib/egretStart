@@ -56,20 +56,20 @@ export class Main extends eui.UILayer {
         await this.loadResource();
         this.createGameScene();
         const result = await RES.getResAsync("description_json");
-        this.startAnimation(result);
-        await platform.login();
-        const userInfo = await platform.getUserInfo();
-        console.log(userInfo);
+        //this.startAnimation(result);
+        //await platform.login();
+        //const userInfo = await platform.getUserInfo();
+        //console.log(userInfo);
     }
     private async loadResource() {
         try {
             const loadingView = new LoadingUI();
             this.stage.addChild(loadingView);
-            //await RES.loadConfig("resource/default.res.json", "resource/");
-            //await this.loadTheme();
-
-            await RES.loadConfig("resource/texture.res.json", "resource/");
+            await RES.loadConfig("resource/default.res.json", "resource/");
+            await this.loadTheme();
             await RES.loadGroup("preload", 0, loadingView);
+            //await RES.loadConfig("resource/texture.res.json", "resource/");
+            
             this.stage.removeChild(loadingView);
         }
         catch (e) {

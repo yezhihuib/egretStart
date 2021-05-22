@@ -18,6 +18,10 @@ export class GameMap implements IMap {
         this.game = game;
     }
 
+    handleTouchMapUnit(rowIndex, columnIndex, mapId) {
+        console.log(rowIndex, columnIndex, mapId)
+    }
+
     renderMap = () => {
         const stageWidth = this.game.stage.stageWidth;
         const unitSize = Math.floor(stageWidth / mazeMap.columnCount);
@@ -31,6 +35,8 @@ export class GameMap implements IMap {
                 bitMap.height = unitSize;
                 bitMap.x = currentX;
                 bitMap.y = currentY;
+                bitMap.touchEnabled = true;
+                bitMap.addEventListener(egret.TouchEvent.TOUCH_TAP, this.handleTouchMapUnit.bind(this, rowIndex, columnIndex, mapId), this);
                 this.game.addChild(bitMap);
             }
         }
