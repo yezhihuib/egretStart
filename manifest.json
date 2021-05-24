@@ -5,9 +5,18 @@
 		"libs/modules/eui/eui.js",
 		"libs/modules/assetsmanager/assetsmanager.js",
 		"libs/modules/tween/tween.js",
-		"libs/modules/promise/promise.js"
+		"libs/modules/promise/promise.js",
+		"libs/modules/physics/physics.js"
 	],
 	"game": [
-		"main.js"
+		"bin-debug/AssetAdapter.js",
+		"bin-debug/LoadingUI.js",
+		"bin-debug/ThemeAdapter.js",
+		"bin-debug/Platform.js",
+		"bin-debug/constant/mapType.js",
+		"bin-debug/utils/common.js",
+		"bin-debug/mazeGenerator/mazeMap.js",
+		"bin-debug/mazeGenerator/mazeMapRender.js",
+		"bin-debug/Main.js"
 	]
 }
