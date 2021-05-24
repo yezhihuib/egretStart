@@ -29,7 +29,7 @@ import { AssetAdapter } from "./AssetAdapter";
 import { ThemeAdapter } from "./ThemeAdapter";
 import { platform } from "./Platform";
 import { LoadingUI } from "./LoadingUI";
-import { GameMap } from "./gameMap";
+import { GameMap } from "./mapRender";
 //////////////////////////////////////////////////////////////////////////////////////
 export class Main extends eui.UILayer {
     protected createChildren(): void {
