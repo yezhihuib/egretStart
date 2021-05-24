@@ -12,7 +12,7 @@ export class MapUnit {
     }
 }
 
-export class MazeBuilder {
+export class MazeMapBuilder {
 
     private mazeMap: MapUnit[]
 
@@ -54,12 +54,13 @@ export class MazeBuilder {
         //设定起点和终点
         this.mazeMap[this.startIndex] = new MapUnit(this.startIndex, MapUnitType.ROAD);
         this.mazeMap[this.mazeMap.length - 2] = new MapUnit(this.mazeMap.length - 2, MapUnitType.ROAD);
+    }
 
-        //
+    public generateMaze() {
         const generator = new PrimMazeGenerator(this.mazeMap, this.rowCount, this.columnCount, this.startIndex);
         generator.generate();
         this.mazeMap = generator.getMazeMap();
-
+        return this.getMaze();
     }
 }
 
@@ -109,40 +110,40 @@ export class PrimMazeGenerator {
 
         let unVisitedRoads = allRoads.filter((item) => !item.isVisited);
         do {
-            let newWalls = [];
             do {
                 //通过未访问的道路来调查周边的墙，并加入墙列表  
                 //console.log('un:', unVisitedRoads)
-                let newRoads = [];
-                newWalls = [];
-                let newWallSet = new Set();
+                let newRoads: PrimMapUnit[] = [];
                 unVisitedRoads.forEach((road) => {
                     road.isVisited = true;
                     const mapUnits = this.getSurrounding(road.index);
                     //console.log('map:', mapUnits)
                     newRoads = newRoads.concat(mapUnits.filter((item) => item.type === MapUnitType.ROAD && !item.isVisited));
                     //console.log('newroads', mapUnits.filter((item) => item.type === "ROAD"));
-                    const walls = mapUnits.filter((item) => item.type === MapUnitType.WALL && !allWallSets.has(item.index) && !newWallSet.has(item.index));
-                    newWalls = newWalls.concat(walls);
-                    newWallSet.add(newWalls.map(item => item.index));
+                    const walls = mapUnits.filter((item) => item.type === MapUnitType.WALL && !allWallSets.has(item.index));
+                    allWalls = allWalls.concat(walls);
+                    walls.forEach((item => allWallSets.add(item.index)));
                 });
                 allRoads = allRoads.concat(newRoads);
                 unVisitedRoads = allRoads.filter((item) => !item.isVisited);
             }
             while (unVisitedRoads.length > 0);
-            //
-            newWalls.forEach((wall) => {
+            //检查所有的墙是否值得拆除
+            let removeWalls: PrimMapUnit[] = [];
+            allWalls.forEach((wall) => {
                 const surrounding = this.getSurrounding(wall.index);
                 //若墙的周边没有未访问过的道路，则直接抛弃这堵墙，不加入墙列表
                 if (!surrounding.find((item) => item.type === MapUnitType.ROAD && !item.isVisited)) {
-                    console.log('throw');
-                    return;
+                    removeWalls = removeWalls.concat(wall);
                 }
-                //console.log("add", wall.index)
-                allWalls = allWalls.concat(wall);
-                allWallSets.add(wall.index);
             });
-
+            const removeWallSet = new Set(removeWalls.map(item => item.index));
+            allWalls = allWalls.filter((item) => !removeWallSet.has(item.index));
+            removeWalls.forEach((item) => allWallSets.delete(item.index));
+            //若已经没有墙了，结束循环
+            if (allWalls.length === 0) {
+                break;
+            }
             //随机移除一个墙
             const rndIndex = Math.floor((Math.random() * allWalls.length));
             const removeWall = allWalls[rndIndex];
@@ -150,9 +151,7 @@ export class PrimMazeGenerator {
             allWallSets.delete(removeWall.index);
             //将墙移除后变为道路，加入到道路集合中
             removeWall.type = MapUnitType.ROAD;
-            this.mazeMap[removeWall.index].type = MapUnitType.ROAD;
             allRoads = allRoads.concat(removeWall);
-            //console.log(allWalls, allRoads, removeWall);
         }
         while (allWalls.length > 0);
 

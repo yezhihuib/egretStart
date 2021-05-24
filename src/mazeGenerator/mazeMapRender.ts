@@ -1,6 +1,6 @@
-import { MapUnitType } from "./constant/mapType";
-import { createBitmapByName } from "./utils/common";
-import { MazeBuilder } from "./mazeGenerator/maze"
+import { MapUnitType } from "../constant/mapType";
+import { createBitmapByName } from "../utils/common";
+import { MazeMapBuilder } from "./mazeMap"
 
 interface IMap {
     game: eui.UILayer
@@ -22,11 +22,12 @@ export class GameMap implements IMap {
 
     game: eui.UILayer;
 
-    mazeBuilder: MazeBuilder;
+    mazeBuilder: MazeMapBuilder;
 
     constructor(game: eui.UILayer) {
         this.game = game;
-        this.mazeBuilder = new MazeBuilder(23, 13);
+        this.mazeBuilder = new MazeMapBuilder(17, 9);
+        this.mazeBuilder.generateMaze();
     }
 
     handleTouchMapUnit(rowIndex, columnIndex, mapId) {
