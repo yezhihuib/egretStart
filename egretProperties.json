@@ -23,7 +23,7 @@
     },
     {
       "name":"physics",
-      "path":"../physics"
+      "path":"./libs/modules/physics"
     }
   ]
 }

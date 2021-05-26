@@ -9,14 +9,6 @@
 		"libs/modules/physics/physics.js"
 	],
 	"game": [
-		"bin-debug/AssetAdapter.js",
-		"bin-debug/LoadingUI.js",
-		"bin-debug/ThemeAdapter.js",
-		"bin-debug/Platform.js",
-		"bin-debug/constant/mapType.js",
-		"bin-debug/utils/common.js",
-		"bin-debug/mazeGenerator/mazeMap.js",
-		"bin-debug/mazeGenerator/mazeMapRender.js",
-		"bin-debug/Main.js"
+		"main.js"
 	]
 }
