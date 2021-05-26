@@ -30,6 +30,7 @@ import { ThemeAdapter } from "./ThemeAdapter";
 import { platform } from "./Platform";
 import { LoadingUI } from "./LoadingUI";
 import { GameMap } from "./mazeGenerator/mazeMapRender";
+import { Bodies, Engine, Render, Runner, World } from "../libs/modules/matter/matter";
 //////////////////////////////////////////////////////////////////////////////////////
 export class Main extends eui.UILayer {
     protected createChildren(): void {
@@ -69,7 +70,7 @@ export class Main extends eui.UILayer {
             await this.loadTheme();
             await RES.loadGroup("preload", 0, loadingView);
             //await RES.loadConfig("resource/texture.res.json", "resource/");
-            
+
             this.stage.removeChild(loadingView);
         }
         catch (e) {
@@ -145,6 +146,21 @@ export class Main extends eui.UILayer {
         button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
     }
 
+    testMatter() {
+        const root = document.getElementsByClassName("egret-player")[0] as HTMLElement;
+        console.log(root);
+        const engine = Engine.create(root);
+        var render = Render.create({
+            element: root,
+            engine
+        });
+        var boxA = Bodies.rectangle(200, 200, 80, 80, undefined);
+        var ground = Bodies.rectangle(400, 510, 810, 60, { isStatic: true });
+        World.add(engine.world, [boxA, ground]);
+        Runner.run(engine);
+        Render.run(render);
+    }
+
     /**
      * 创建场景界面
      * Create scene interface
@@ -153,6 +169,7 @@ export class Main extends eui.UILayer {
         //this.createDefault();
         const gameMap = new GameMap(this);
         gameMap.renderMap();
+        this.testMatter();
     }
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
