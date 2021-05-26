@@ -22,8 +22,8 @@
       "name": "promise"
     },
     {
-      "name":"physics",
-      "path":"./libs/modules/physics"
+      "name":"matter",
+      "path":"./libs/modules/matter"
     }
   ]
 }
