@@ -31,6 +31,7 @@ import { platform } from "./Platform";
 import { LoadingUI } from "./LoadingUI";
 import { GameMap } from "./mazeGenerator/mazeMapRender";
 import { Bodies, Engine, Render, Runner, World } from "../libs/modules/matter/matter";
+import { RectangleGameObj } from "./gameObject";
 //////////////////////////////////////////////////////////////////////////////////////
 export class Main extends eui.UILayer {
     protected createChildren(): void {
@@ -148,17 +149,47 @@ export class Main extends eui.UILayer {
 
     testMatter() {
         const root = document.getElementsByClassName("egret-player")[0] as HTMLElement;
-        console.log(root);
-        const engine = Engine.create(root);
+        //const root = document.getElementsByTagName("canvas")[0];
+        const engine = Engine.create();
         var render = Render.create({
             element: root,
             engine
         });
-        var boxA = Bodies.rectangle(200, 200, 80, 80, undefined);
-        var ground = Bodies.rectangle(400, 510, 810, 60, { isStatic: true });
-        World.add(engine.world, [boxA, ground]);
+        var boxA = new RectangleGameObj(Bodies.rectangle(200, 0, 80, 80));
+        var ground = new RectangleGameObj(Bodies.rectangle(400, 510, 810, 60, { isStatic: true }));
+
+
+        World.add(engine.world, [boxA.physicsBody, ground.physicsBody]);
         Runner.run(engine);
         Render.run(render);
+    }
+
+    onEnterFrame() {
+        if (!this.runner || !this.engine) {
+            return;
+        }
+        Runner.tick(this.runner, this.engine, 0.06);
+        this.rectObjs.forEach(rect => {
+            rect.updateDisplayObj();
+        });
+        //Engine.update(this.engine,16.6666);
+    }
+
+    engine: Engine;
+    runner: Runner;
+    rectObjs: RectangleGameObj[];
+
+
+    testEgretRender() {
+        this.engine = Engine.create();
+        var boxA = new RectangleGameObj(Bodies.rectangle(200, 0, 80, 80));
+        var ground = new RectangleGameObj(Bodies.rectangle(400, 510, 810, 60, { isStatic: true }));
+        World.add(this.engine.world, [boxA.physicsBody, ground.physicsBody]);
+        this.runner = Runner.create();
+        this.rectObjs = [boxA, ground]
+        this.addChild(boxA.createDisplayObj());
+        this.addChild(ground.createDisplayObj());
+        this.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
     }
 
     /**
@@ -167,9 +198,10 @@ export class Main extends eui.UILayer {
      */
     protected createGameScene(): void {
         //this.createDefault();
-        const gameMap = new GameMap(this);
-        gameMap.renderMap();
-        this.testMatter();
+        //const gameMap = new GameMap(this);
+        //gameMap.renderMap();
+        //this.testMatter();
+        this.testEgretRender();
     }
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
